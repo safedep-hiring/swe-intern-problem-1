@@ -1,0 +1,13 @@
+// settings.gradle
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        mavenLocal()
+    }
+    plugins {
+        id 'io.quarkus' version '3.7.1'
+    }
+}
+
+rootProject.name = 'safedep-swe'

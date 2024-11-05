@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'io.quarkus' version '3.7.1'
+}
+
+group = 'com.example'
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+}
+
+dependencies {
+
+    implementation enforcedPlatform("io.quarkus.platform:quarkus-bom:3.7.1")
+    implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-resteasy-reactive'
+    implementation 'io.quarkus:quarkus-resteasy-reactive-jackson'
+    implementation 'net.bytebuddy:byte-buddy:LATEST'
+
+    implementation 'io.quarkus:quarkus-hibernate-orm-panache'
+    // implementation 'io.quarkus:quarkus-jdbc-postgresql'
+    implementation 'io.quarkus:quarkus-jdbc-h2'
+    testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.rest-assured:rest-assured'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+tasks.withType(Test) {
+    systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+}
+
+task printDependencies {
+    doLast {
+        configurations.implementation.each { println it }
+    }
+}
+tasks.withType(JavaExec) {
+    jvmArgs '-Dnet.bytebuddy.experimental=true'
+}
+test {
+    jvmArgs '-Dnet.bytebuddy.experimental=true'
+}
