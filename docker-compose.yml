@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+    container_name: command_api
+    environment:
+      DATABASE_URL: postgresql://neondb_owner:m9XnkEbxzKU3@ep-wild-cloud-a1zancmc.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+      PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/src/app
+    command: sh -c "npm install && npx prisma migrate deploy && npm run start"
+
+  db:
+    image: postgres:15
+    container_name: command_db
+    environment:
+      POSTGRES_USER: granth
+      POSTGRES_PASSWORD: granthpai
+      POSTGRES_DB: command_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

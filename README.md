@@ -1,55 +1,63 @@
-# Memory in the Shell
+# Command API
 
-We love the `shell`. [bash](#) or [zsh](#) or [fish](#) or [powershell](#) or name
-your own. But the `shell` forgets, especially when we are across multiple
-systems. It would be incredible if the `shell` could *safely* remember things for us,
-across systems. So let us extend the `shell` to remember things for us.
+## Overview
+A robust API to store and search shell commands across systems.
 
-## Problem
+## Prerequisites
+- Docker
+- Docker Compose
 
-The overall system will probably have multiple components. It may also need to
-handle some of the nuances of each shell. But we love to keep things simple.
-So, let us first build a simple API that can store the typed commands.
+## Configuration
+1. Ensure you have the following files in your project root:
+   - `Dockerfile`
+   - `docker-compose.yml`
+   - `.env` (optional, for local development)
 
-### Requirements
+## Environment Variables
+The application uses `DATABASE_URL` for database connection:
+- In Docker Compose: Configured in the `docker-compose.yml`
+- Locally: Create a `.env` file with:
+  ```
+  DATABASE_URL=postgresql://username:password@localhost:5432/command_db?schema=public
+  ```
 
-1. The API should be able to store the commands typed by the user.
-2. The API should be able to search the command history by keyword.
+## Running the Application
 
-For example, the following command should store a `command`:
-
+### Using Docker Compose
 ```bash
-curl -X POST http://localhost:8080/api/v1/commands -d "command=ls -l"
+# Build and start the services
+docker-compose up --build
+
+# To run in detached mode
+docker-compose up -d --build
 ```
 
-Example command to search history:
-
+### Stopping the Application
 ```bash
-curl -X GET http://localhost:8080/api/v1/commands?keyword=ls
+docker-compose down
 ```
 
-> :warning: Should we enforce a minimum length for the command?
+## API Endpoints
 
-### Instructions
+### Store a Command
+```bash
+# Using curl
+curl -X POST http://localhost:8080/api/v1/commands \
+     -H "Content-Type: application/json" \
+     -d '{"command":"ls -l"}'
 
-1. Feel free to use any programming language
-2. Use a database, not just an in-memory list or map
+# Or with form-urlencoded
+curl -X POST http://localhost:8080/api/v1/commands \
+     -H "Content-Type: application/x-www-form-urlencoded" \
+     -d "command=ls -l"
+```
 
-> Note: Any database is fine. Even in-memory `sqlite`.
+### Search Commands
+```bash
+curl "http://localhost:8080/api/v1/commands?keyword=ls"
+```
 
-## Reviewer Experience
-
-The reviewer should be able to run your application using
-`docker-compose`. Additional steps are fine but should be documented.
-
-## Submission
-
-1. Create a [private fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) of this repository.
-2. Commit your code to the forked repository `dev` branch
-3. Create a pull request from your `dev` branch to your `main` branch
-4. Invite [@abhisek](https://github.com/abhisek) to your private fork repository
-5. Add `@abhisek` as a reviewer to the pull request
-
-## Questions?
-
-Create an [issue](https://github.com/safedep-hiring/swe-intern-problem-1/issues)
+## Development
+- Install dependencies: `npm install`
+- Generate Prisma client: `npx prisma generate`
+- Run migrations: `npx prisma migrate deploy`

@@ -1,0 +1,20 @@
+# Node.js
+node_modules/
+
+# Build output
+dist/
+
+# Prisma generated files
+prisma/
+
+# Environment files
+.env
+
+# Log files
+*.log
+
+# VSCode settings
+.vscode/
+
+# System files
+.DS_Store
